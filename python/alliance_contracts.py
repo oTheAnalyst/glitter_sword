@@ -1,7 +1,6 @@
 import requests
 import json
 url = "https://esi.evetech.net/corporations/98224639/contracts"
-url2 = "https://esi.evetech.net/corporations/98224639/contracts/229222522/items"
 
 headers = {
     "Accept-Language": "",
@@ -14,6 +13,5 @@ headers = {
 
 response = requests.get(url, headers=headers)
 
-res = json.dumps(response.json())
-print(res)
-
+with open('../data/dng_contracts_current.json', 'w') as f:
+ f.write(json.dumps(response.json()))
