@@ -28,6 +28,9 @@
       buildInputs = with pkgs; [
         duckdb
       ];
+  shellHook = ''
+     echo fish
+    '';
     };
   };
 }
