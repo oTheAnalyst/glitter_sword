@@ -6,6 +6,7 @@ def eve_esi(contract_id):
     url = f'https://esi.evetech.net/corporations/98224639/contracts/{contract_id}/items'
     headers = {
         "Accept": "application/json",
+
     }
     response = requests.get(url, headers=headers)
     
@@ -14,13 +15,13 @@ def eve_esi(contract_id):
     return None
 
 # Fetch data
-con = duckdb.connect("dirty_contracts.ddb")
+con = duckdb.connect("md:glitter_sword")
 contracts_ids = con.sql("SELECT distinct contract_id from stg.dng_contract").fetchall()
 ids_list = [int(row[0]) for row in contracts_ids]
 con.close()
 
 # Export as NDJSON (BEST for DuckDB)
-with open('mega_ndjson.json', 'w') as f:
+with open('data/mega_ndjson.json', 'w') as f:
     for contract_id in ids_list:
         print(f"Processing contract {contract_id}")
         contract_data = eve_esi(contract_id)

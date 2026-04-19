@@ -13,5 +13,5 @@ headers = {
 
 response = requests.get(url, headers=headers)
 
-with open('../data/dng_contracts_current.json', 'w') as f:
+with open('data/dng_contracts_current.json', 'w') as f:
  f.write(json.dumps(response.json()))
