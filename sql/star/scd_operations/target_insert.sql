@@ -1,27 +1,25 @@
-INSERT INTO star.target (
-acceptor_id ,
-assignee_id ,
-availability ,
-collateral ,
-contract_id ,
-date_accepted ,
-date_completed ,
-date_expired ,
-date_issued ,
-days_to_complete ,
-end_location_id ,
-for_corporation ,
-issuer_corporation_id ,
-issuer_id ,
-price ,
-reward ,
-start_location_id ,
-status ,
-title ,
-"types",
-volume,
-import_id,
-record_id 
+INSERT INTO star.contracts (
+  acceptor_id ,
+  assignee_id ,
+  availability ,
+  collateral ,
+  contract_id ,
+  date_accepted ,
+  date_completed ,
+  date_expired ,
+  date_issued ,
+  days_to_complete ,
+  end_location_id ,
+  for_corporation ,
+  issuer_corporation_id ,
+  issuer_id ,
+  price ,
+  reward ,
+  start_location_id ,
+  status ,
+  title ,
+  type,
+  volume,
 )
 SELECT 
 acceptor_id ,
@@ -43,13 +41,8 @@ reward ,
 start_location_id ,
 status ,
 title ,
-"types",
+"type",
 volume,
-import_id,
-record_id 
-FROM stg.dng_contracts as source
-INNER JOIN star.target as target
-  ON source.contract_id = target.contract_id
-WHEN target.status =  'finished'
+FROM stg.dng_contract as source
 
 
