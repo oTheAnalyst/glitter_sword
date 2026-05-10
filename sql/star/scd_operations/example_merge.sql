@@ -12,11 +12,14 @@ WHEN MATCHED AND (
      WHEN source.date_completed IS NOT NULL THEN source.date_completed
      WHEN source.date_completed IS NULL THEN source.date_expired
      END,
-    dw_is_current = 'expired'
+  dw_is_current = CASE WHEN dw_valid_to > current_localtimestamp() THEN 'expired' END
 
 WHEN NOT MATCHED BY SOURCE AND target.dw_is_current = 'current' THEN UPDATE SET 
-    dw_valid_to = CASE WHEN target.status = 'deleted' THEN current_localtimestamp() - INTERVAL '1 day'
-     WHEN source.date_completed IS NOT NULL THEN source.date_completed
+    dw_valid_to = 
+    CASE WHEN target.status = 'deleted' 
+    THEN current_localtimestamp() - INTERVAL '1 day'
+     WHEN source.date_completed IS NOT NULL 
+      THEN source.date_completed
      WHEN source.date_completed IS NULL THEN source.date_expired
      END,
     dw_is_current = 'expired'

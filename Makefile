@@ -1,6 +1,17 @@
 plat = 'md:glitter_sword'
 
-scd_operation_test:
-	@echo "ingested new data into database from stagging table into normalized table"
+reset star_table:
+	@echo "reset star tabe using backup table"
+	duckdb $(plat) < sql/star/scd_operations/reset_star.sql
+
+scd_merg_test:
+	@echo "ingested new data into database from stagging table into types 2 table"
 	duckdb $(plat) < sql/star/scd_operations/example_merge.sql
 	duckdb $(plat) < sql/star/scd_operations/example_scd_insert.sql
+
+
+
+scd_ui_test:
+	@echo "ingested new data into database from stagging into SCD type 2 table"
+	duckdb $(plat) < sql/star/scd_operations/crud_scdupdate.sql
+	duckdb $(plat) < sql/star/scd_operations/scdinsert.sql
