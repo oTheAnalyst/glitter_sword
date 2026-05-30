@@ -14,6 +14,7 @@
       packages = [
         (pkgs.python3.withPackages (python-pkgs: [
           python-pkgs.numpy
+          python-pkgs.python-dotenv
           python-pkgs.dash
           python-pkgs.pandas
           python-pkgs.duckdb

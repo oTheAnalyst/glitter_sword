@@ -1,22 +1,42 @@
 import requests
 import json
 import duckdb
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+
+# --- Configuration ---
+CLIENT_ID = os.environ.get('EVE_CLIENT_ID')
+# Note: CLIENT_SECRET is not used with PKCE tokens
+REFRESH_TOKEN = os.environ.get('EVE_REFRESH_TOKEN')
+
+def get_access_token():
+    url = "https://login.eveonline.com/v2/oauth/token"
+    data = {
+        "grant_type": "refresh_token",
+        "refresh_token": REFRESH_TOKEN,
+        "client_id": CLIENT_ID  # Required in body for PKCE
+    }
+    response = requests.post(url, data=data)
+    response.raise_for_status()
+    return response.json()['access_token']
+
+# -- eve esi bucket 
 def eve_esi(contract_id):
+    access_token = get_access_token()
     url = f'https://esi.evetech.net/corporations/98224639/contracts/{contract_id}/items'
     headers = {
         "Accept": "application/json",
-
     }
     response = requests.get(url, headers=headers)
-    
     if response.status_code == 200:
         return response.json()
     return None
 
 # Fetch data
 con = duckdb.connect("md:glitter_sword")
-contracts_ids = con.sql("SELECT distinct contract_id from stg.dng_contract").fetchall()
+contracts_ids = con.sql("SELECT distinct contract_id from 'data/dng_contracts_current.json'").fetchall()
 ids_list = [int(row[0]) for row in contracts_ids]
 con.close()
 
