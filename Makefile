@@ -15,3 +15,10 @@ scd_ui_test:
 	@echo "ingested new data into database from stagging into SCD type 2 table"
 	duckdb $(plat) < sql/star/scd_operations/crud_scdupdate.sql
 	duckdb $(plat) < sql/star/scd_operations/scdinsert.sql
+
+ingest_stg_layer:
+	@echo "ingest data into json"
+	python ./python/Ingestion/ds_current_contract.py
+	python ./python/Ingestion/ds_bucket_contracts.py
+	python ./python/Ingestion/ds_corprate_identity.py
+	duckdb $(plat) < sql/stg/imports/stg_ingestion.sql
