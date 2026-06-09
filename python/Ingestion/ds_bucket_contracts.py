@@ -40,7 +40,7 @@ def eve_esi(contract_id):
 # Fetch data
 con = duckdb.connect("md:glitter_sword")
 contracts_ids = con.sql(
-    "SELECT distinct contract_id from 'data/dng_contracts_current.json'"
+    "SELECT distinct contract_id from 'data/allaince_contracts_main.json'"
 ).fetchall()
 ids_list = [int(row[0]) for row in contracts_ids]
 con.close()
