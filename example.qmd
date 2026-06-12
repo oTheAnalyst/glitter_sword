@@ -1,0 +1,32 @@
+---
+title: "Python Example"
+format: html
+---
+
+## Setup
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+```
+
+## Data
+
+```{python}
+df = pd.DataFrame({
+    "x": [1, 2, 3, 4],
+    "y": [10, 15, 25, 30]
+})
+df
+```
+
+## Plot
+
+```{python}
+#| fig-cap: "Simple line plot"
+plt.plot(df["x"], df["y"], marker="o")
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.grid(True)
+plt.show()
+```

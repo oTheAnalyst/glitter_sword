@@ -10,28 +10,35 @@
     #       "aarch64-linux" / "x86_64-darwin" / "aarch64-darwin"
     pkgs = nixpkgs.legacyPackages.${system};
   in {
-    devShells.${system}.default = pkgs.mkShell {
-      packages = [
-        (pkgs.python3.withPackages (python-pkgs: [
-          python-pkgs.numpy
-          python-pkgs.python-dotenv
-          python-pkgs.dash
-          python-pkgs.pandas
-          python-pkgs.duckdb
-          python-pkgs.pandas
-          python-pkgs.scipy
-          python-pkgs.matplotlib
-          python-pkgs.pyarrow
-          python-pkgs.fastparquet
-          python-pkgs.requests
-        ]))
-      ];
-      buildInputs = with pkgs; [
-        duckdb
-      ];
-  shellHook = ''
-     echo fish
-    '';
-    };
+    devShells.${system}.default = let
+      pythonpkgs = ps:
+        with ps; [
+          numpy
+          python-dotenv
+          dash
+          pandas
+          duckdb
+          pandas
+          scipy
+          matplotlib
+          pyarrow
+          fastparquet
+          requests
+        ];
+    in
+      pkgs.mkShell {
+        packages = with pkgs; [
+          (pkgs.python3.withPackages pythonpkgs)
+          duckdb
+          dbt
+          google-cloud-sdk
+          (quarto.override {
+            extraPythonPackages = pythonpkgs;
+          })
+        ];
+        shellHook = ''
+          echo fish
+        '';
+      };
   };
 }
