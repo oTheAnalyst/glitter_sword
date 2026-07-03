@@ -4,34 +4,45 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
 
-  outputs = {nixpkgs, ...}: let
+  outputs = {
+    nixpkgs,
+    self,
+    ...
+  }: let
     system = "x86_64-linux";
     #       ↑ Swap it for your system if needed
     #       "aarch64-linux" / "x86_64-darwin" / "aarch64-darwin"
     pkgs = nixpkgs.legacyPackages.${system};
   in {
-    devShells.${system}.default = pkgs.mkShell {
-      packages = [
-        (pkgs.python3.withPackages (python-pkgs: [
-          python-pkgs.numpy
-          python-pkgs.python-dotenv
-          python-pkgs.dash
-          python-pkgs.pandas
-          python-pkgs.duckdb
-          python-pkgs.pandas
-          python-pkgs.scipy
-          python-pkgs.matplotlib
-          python-pkgs.pyarrow
-          python-pkgs.fastparquet
-          python-pkgs.requests
-        ]))
-      ];
-      buildInputs = with pkgs; [
-        duckdb
-      ];
-  shellHook = ''
-     echo fish
-    '';
-    };
+    packages.${system}.dbt-duckdb = pkgs.callPackage ./dbt-duckdb.nix {};
+
+    devShells.${system}.default = let
+      pythonpkgs = (pkgs.python3.withPackages (ps:
+        with ps; [
+          self.packages.${system}.dbt-duckdb
+          numpy
+          python-dotenv
+          dash
+          pandas
+          duckdb
+          pandas
+          scipy
+          matplotlib
+          pyarrow
+          fastparquet
+          requests
+        ])).override {ignoreCollisions = true;};
+    in
+      pkgs.mkShell {
+        packages = with pkgs; [
+          pythonpkgs
+          duckdb
+          dbt
+          google-cloud-sdk
+        ];
+        shellHook = ''
+          echo fish
+        '';
+      };
   };
 }
