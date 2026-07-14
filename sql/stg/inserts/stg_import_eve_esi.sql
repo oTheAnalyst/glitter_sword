@@ -1,5 +1,0 @@
-INSERT INTO stg.stg_imports (source_name, original_file_path)
-VALUES ('developers.eveonline.com/docs/services/static-data/#json-lines', 'types.jsonl')
-       ('EVE ESI Get corporation contracts', 'data/corporation_contracts.json')
-       ('Get corporation contract items ', 'data/mega_nd.json')
-       ('data.everef.net/markets-prices/', 'markets-prices-latest.json')
